@@ -9,7 +9,11 @@ const BookSchema = new Schema({
     edition: { type: String },
     genre: { type: String },
     availabilityStatus: { type: Boolean, default: true },
-})
+    createdBy:{type: Schema.Types.ObjectId, ref:'Staff', required:true}
+},{
+    timestamps:{createdAt:'created_at', updatedAt:'updated_at'}
+}
+)
 
 const Book = mongoose.model('Book', BookSchema)
 
