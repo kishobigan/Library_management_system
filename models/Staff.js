@@ -7,7 +7,8 @@ const staffSchema = new Schema({
     phone: { type: String, required: true },
     position: { type: String, required: true },
     salary: { type: Number, required: true },
-    createdBy: {type: Schema.Types.ObjectId, ref:'Staff', required:true}
+    password: {type: String, required:true},
+    // createdBy: {type: Schema.Types.ObjectId, ref:'Staff', required:true}
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } // Enable custom timestamp fields
 });
