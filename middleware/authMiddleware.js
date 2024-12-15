@@ -9,4 +9,12 @@ const authToken = (req, res, next) => {
             error:'Access Denied, Token has not provided'
         })
     }
+
+    try {
+        const verified = jwt.verify(token, SECRET_KEY)
+        req.user = verified
+        next()
+    }catch(error){
+        res.status(400).json({ error: 'Invalid Token' });
+    }
 }
