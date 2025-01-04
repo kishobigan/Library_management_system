@@ -89,13 +89,31 @@ const updateBook = async (req, res) => {
 }
 
 const getAllBook = async (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        message: 'done'
-    })
+    const user = req.user
+    if (!isStaff(user)) {
+        return res.status(403).json({ message: 'You are not a staff member' })
+    }
+
+    try{
+        const books = await Book.find()
+        res.status(200).json({
+            status: 'success',
+            message: books
+        })
+    }catch(error){
+        res.status(400).json({
+            status: 'failed',
+            message: 'something went wrong'
+        })
+    }
 }
 
 const getBookById = async (req, res) => {
+    const user = req.user
+    if (!isStaff(user)) {
+        return res.status(403).json({ message: 'You are not a staff member' })
+    }
+
     res.status(200).json({
         status: 'success',
         message: 'done'
@@ -103,6 +121,11 @@ const getBookById = async (req, res) => {
 }
 
 const getBookByCreatedBy = async (req, res) => {
+    const user = req.user
+    if (!isStaff(user)) {
+        return res.status(403).json({ message: 'You are not a staff member' })
+    }
+
     res.status(200).json({
         status: 'success',
         message: 'done'
