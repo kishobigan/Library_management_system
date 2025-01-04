@@ -7,9 +7,9 @@ const createBook = async (req, res) => {
         return res.status(403).json({ message: 'You are not a staff member' })
     }
 
-    const {title, author, isbn, publisher, edition, genre ,availabilityStatus} = req.body
+    const {title, author, isbn, publisher, edition, genre } = req.body
 
-    if(!title || !author || !isbn || !publisher || !edition || !genre || !availabilityStatus){
+    if(!title || !author || !isbn || !publisher || !edition || !genre){
         return res.status(400).json({ message: 'Please fill in all fields' })
     }
 
@@ -21,7 +21,6 @@ const createBook = async (req, res) => {
             publisher,
             edition,
             genre,
-            availabilityStatus,
             createdBy: user._id
         })
 
@@ -40,10 +39,53 @@ const createBook = async (req, res) => {
 }
 
 const updateBook = async (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        message: 'done'
-    })
+    const user = req.user
+    if (!isStaff(user)) {
+        return res.status(403).json({ message: 'You are not a staff member' })
+    }
+
+    const id = req.params.id
+    if(!id){
+        return res.status(400).json({ message: 'Please provide a valid id' })
+    }
+
+    const {title, author, isbn, publisher, edition, genre } = req.body
+
+    if(!title || !author || !isbn || !publisher || !edition || !genre){
+        return res.status(400).json({ message: 'Please fill in all fields' })
+    }
+
+    try{
+
+        const updatedData = {
+            title,
+            author,
+            isbn,
+            publisher,
+            edition,
+            genre,
+            updatedBy: user._id
+        }
+
+        const book = await Book.findByIdAndUpdate(id, updatedData, {new:true})
+
+        if(!book){
+            res.status(400).json({
+                status: 'failed',
+                message: 'book not found'
+            })
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'done'
+        })
+    }catch(error){
+        res.status(400).json({
+            status: 'failed',
+            message: 'something went wrong'
+        })
+    }
+    
 }
 
 const getAllBook = async (req, res) => {
