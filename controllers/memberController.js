@@ -42,3 +42,31 @@ const createMember = async (req, res) => {
         })
     }
 }
+
+const editMember = async (req, res) => {
+    res.json(200).status({
+        status:'success',
+        message:'Member edited successfully'
+    })
+}
+
+const getAllMember = async (req, res) => {
+    res.json(200).status({
+        status:'success',
+        message:'Member edited successfully'
+    })
+}
+
+const getMemberByEmail = async (req, res) => {
+    res.json(200).status({
+        status:'success',
+        message:'Member edited successfully'
+    })
+}
+
+module.exports = {
+    createMember,
+    editMember,
+    getAllMember,
+    getMemberByEmail
+}
