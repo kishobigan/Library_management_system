@@ -103,6 +103,15 @@ const editMember = async (req, res) => {
 }
 
 const getAllMember = async (req, res) => {
+    const staff = req.user
+
+    if(staff.role != 'staff'){
+        res.status(401).json({
+            status:'failed',
+            message: 'Only staff can create member'
+        })
+    }
+
     try{
         const members = await Member.find().populate('membershipType')
         res.json(200).status({
@@ -123,6 +132,17 @@ const getAllMember = async (req, res) => {
 
 const getMemberById = async (req, res) => {
     const id = req.params.id;
+
+    const staff = req.user
+    
+    if(staff.role != 'staff'){
+        res.status(401).json({
+            status:'failed',
+            message: 'Only staff can create member'
+        })
+    }
+
+
     try {
         const member = await Member.findById(id).populate('membershipType')
         if(!member){
@@ -144,16 +164,43 @@ const getMemberById = async (req, res) => {
     
 }
 
-const getMemberEmail = async (req, res) => {
-    res.json(200).status({
-        status:'success',
-        message:'Member edited successfully'
-    })
+const getMemberByEmail = async (req, res) => {
+    const {email} = req.body
+
+    const staff = req.user
+    
+    if(staff.role != 'staff'){
+        res.status(401).json({
+            status:'failed',
+            message: 'Only staff can create member'
+        })
+    }
+
+    try {
+        const member = Member.findOne(email)
+        if(!member){
+            res.json(400).status({
+                status:'failed',
+                message:'No members associated with this email'
+            })
+        }
+
+        res.json(200).status({
+            status:'success',
+            message: member
+        })
+    }catch(error){
+        res.json(400).status({
+            status:'failed',
+            message:'Something went wrong'
+        })
+    }
 }
 
 module.exports = {
     createMember,
     editMember,
     getAllMember,
-    getMemberByEmail
+    getMemberByEmail,
+    getMemberById
 }
