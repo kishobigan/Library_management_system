@@ -121,7 +121,30 @@ const getAllMember = async (req, res) => {
     })
 }
 
-const getMemberByEmail = async (req, res) => {
+const getMemberById = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const member = await Member.findById(id).populate('membershipType')
+        if(!member){
+            res.json(400).status({
+                status:'failed',
+                message:'Cannot find member by this id'
+            })
+        }
+        res.json(200).status({
+            status:'success',
+            message:member
+        })
+    }catch(error){
+        res.json(400).status({
+            status:'failed',
+            message:'Something Went wrong'
+        })
+    }
+    
+}
+
+const getMemberEmail = async (req, res) => {
     res.json(200).status({
         status:'success',
         message:'Member edited successfully'
