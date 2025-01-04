@@ -44,10 +44,63 @@ const createMember = async (req, res) => {
 }
 
 const editMember = async (req, res) => {
-    res.json(200).status({
-        status:'success',
-        message:'Member edited successfully'
-    })
+    const id = req.params.id
+    const {name, email, phone, address, membershipType, renewal } = req.body
+    const staff = req.user
+
+    if(!name, !email, !phone, !address, !membershipType, !renewal){
+        res.status(400).json({
+            status:'failed',
+            message: 'Name, email, phone, address and membership type are required'
+        })
+    }
+
+    if(staff.role != 'staff'){
+        res.status(401).json({
+            status:'failed',
+            message: 'Only staff can create member'
+        })
+    }
+
+    if(renewal){
+        const membershipStartDate = new Date()
+        const membershipEndDate = new Date(membershipStartDate);
+        membershipEndDate.setFullYear(membershipEndDate.getFullYear() + 1);
+    }
+
+    try{
+        const updateData = {
+            name,
+            email,
+            phone,
+            address,
+            membershipType
+        };
+
+        // Add membership dates if renewal is true
+        if (renewal) {
+            updateData.membershipEndDate = membershipEndDate;
+        }
+        const member = await Member.findByIdAndUpdate(id, updateData, {new: true})
+
+        if(!member){
+            res.json(400).status({
+                status:'failed',
+                message:'Member edited failed'
+            })
+        }
+
+        res.json(200).status({
+            status:'failed',
+            message:'Member edited successfully'
+        })
+    }catch(error){
+        res.json(400).status({
+            status:'failed',
+            message:'Something went wrong'
+        })
+    }
+    
 }
 
 const getAllMember = async (req, res) => {
