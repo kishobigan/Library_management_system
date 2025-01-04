@@ -77,7 +77,6 @@ const editMember = async (req, res) => {
             membershipType
         };
 
-        // Add membership dates if renewal is true
         if (renewal) {
             updateData.membershipEndDate = membershipEndDate;
         }
@@ -104,6 +103,18 @@ const editMember = async (req, res) => {
 }
 
 const getAllMember = async (req, res) => {
+    try{
+        const members = await Member.find().populate('membershipType')
+        res.json(200).status({
+            status:'success',
+            message:members
+        })
+    }catch(error){
+        res.json(400).status({
+            status:'failed',
+            message:'Something went wrong'
+        })
+    }
     res.json(200).status({
         status:'success',
         message:'Member edited successfully'
