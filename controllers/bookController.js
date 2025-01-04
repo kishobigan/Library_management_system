@@ -114,10 +114,25 @@ const getBookById = async (req, res) => {
         return res.status(403).json({ message: 'You are not a staff member' })
     }
 
-    res.status(200).json({
-        status: 'success',
-        message: 'done'
-    })
+    const id = req.params.id
+    if(!id){
+        res.status(400).json({message:"please provide a book id"})
+    }
+
+    try{
+        const book = await Book.findById(id)
+        res.status(200).json({
+            status: 'success',
+            message: book
+        })
+    }catch(error){
+        res.status(400).json({
+            status: 'failed',
+            message: 'something went wrong'
+        })
+    }
+
+
 }
 
 const getBookByCreatedBy = async (req, res) => {
